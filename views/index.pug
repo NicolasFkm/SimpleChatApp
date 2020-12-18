@@ -1,13 +1,10 @@
 html
-    head
-        title ChatJS
-        link(rel='stylesheet', href='/css/style.css')
+    include includes/header.pug
     body
-        .history
+        #history
         form.chat-box(method="POST")
             input#message(type="text", name='message', autocomplete="off")
             input(type="submit", value='send')
 
-        script(src='/socket.io/socket.io.js')
-        script(src='https://code.jquery.com/jquery-3.4.1.min.js')
-        script(src='/js/socket-script.js')
+
+        include includes/footer.pug
