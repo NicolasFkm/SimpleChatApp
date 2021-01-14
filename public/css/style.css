@@ -39,8 +39,17 @@ form input[type='submit']{
     overflow-y: scroll;
 }
 
-#history .message-box p{
-    width: fit-content;
+#history .message-container{
+    width: 100%;
+    display: inline-block;
+}
+
+#history .message-box.sent{
+    float: right;
+}
+
+#history .message-box{
+    width: fit-content!important;
     padding: 1rem 0.5rem;
     background: #ddd;
     border-radius: 0.5rem;
@@ -48,11 +57,10 @@ form input[type='submit']{
     display: block;
 }
 
-#history .message-box p.sent{
-    float: right;
+#history .message-box p{
+    margin: 0;
 }
 
-#history .message-box {
-    width: 100%;
-    display: inline-block;
+#footer p{
+    color: #FFFFFF;
 }

@@ -11,15 +11,20 @@ $(function () {
     });
 
     socket.on('chat message', function (msg) {
-
+        const container = $('<div>').addClass("message-container"); 
         const div = $('<div>').addClass("message-box");
+        const user = $('<small>').text(`${msg.username}: `);
         const message = $('<p>').text(msg.message);
-
+        
         if(msg.username == username){
-            message.addClass("sent");
+            div.addClass("sent");
+        }
+        else{
+            div.append(user);
         }
         div.append(message);
-        $('#history').append(div);
+        container.append(div)
+        $('#history').append(container);
         var objDiv = document.getElementById("history");
         objDiv.scrollTop = objDiv.scrollHeight;
     });
