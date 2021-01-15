@@ -1,10 +1,11 @@
 html
     include includes/header.pug
     body
-        #history
-        form.chat-box(method="POST")
-            input#message(type="text", name='message', autocomplete="off")
-            input(type="submit", value='send')
+        h1 Hello!
+        p To start/enter in a chat room, please enter the name:
 
-
+        form.chat-room(method="POST", action='/chat/join')
+            input#chatRoomName(type="text", name='chatRoomName', autocomplete="off")
+            input(type="submit", value='send') 
+        
         include includes/footer.pug

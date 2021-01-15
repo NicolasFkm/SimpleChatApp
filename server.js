@@ -1,30 +1,23 @@
 const express = require('express');
 const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const router = require("./routes");
+const bodyParser = require("body-parser");
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'))
+app.use(router);
 app.set('view engine', 'pug');
 app.set('views', './views');
 
+const http = require('http').createServer(app);
+const ChatSocketService = require("./services/chatSocketService");
 
-app.get('/', (req, res) => {
-    res.render('index');
-});
+const chatSocket = new ChatSocketService(http);
+const io = chatSocket.chatIO;
 
-io.on('connection', (socket) => {
-    console.log('User connected');
-    socket.broadcast.emit('hi');
-    socket.on('chat message', (msg) => {
-        console.log('message: ' + msg);
-        io.emit('chat message', msg);
-      });
+const PORT = process.env.PORT || 3000;
 
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
-})
-
-http.listen(3000, () => {
-    console.log('listening on *:3000');
+http.listen(PORT, () => {
+    console.log(`listening on ${PORT}`);
 });

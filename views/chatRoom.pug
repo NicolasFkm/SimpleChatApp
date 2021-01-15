@@ -1,0 +1,12 @@
+html
+    include includes/header.pug
+    body
+        h1 #{chatName}
+        #history
+        form.chat-box(method="POST", action="chat/send")
+            input#message(type="text", name='message', autocomplete="off")
+            input.hidden(type="text", name='chatRoom', value="#{chatName}", autocomplete="off")
+            input(type="submit", value='send')
+
+
+        include includes/footer.pug
