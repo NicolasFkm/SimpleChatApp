@@ -1,17 +1,17 @@
-const express = require('express');
-const app = express();
-const router = require("./routes");
-const bodyParser = require("body-parser");
+import express from 'express';
+import bodyParser from "body-parser";
+import ChatSocketService from "./services/chatSocketService";
+import path from 'path';
 
+const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'))
-app.use(router);
+app.use(require("./routes"));
 app.set('view engine', 'pug');
-app.set('views', './views');
+app.set('views', path.join(__dirname, 'views'));
 
 const http = require('http').createServer(app);
-const ChatSocketService = require("./services/chatSocketService");
 
 const chatSocket = new ChatSocketService(http);
 const io = chatSocket.chatIO;
