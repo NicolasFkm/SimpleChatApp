@@ -8,6 +8,11 @@ body{
     padding:10px;
 }
 
+h1.chat-title{
+    color: #45C5BF;
+    text-align: center;
+}
+
 h1,p{
     color: #ffffff;
 }
@@ -16,18 +21,23 @@ h1,p{
     display: none;
 }
 
-form{
-    margin:15px 0;
+form.chat-box{
+    margin: 0 auto;
+    height: 10%;
 }
 
-form input[type='text']{
-    border:2px solid #45C5BF;
+form.chat-box input{
+    height: 100%;
+}
+
+form.chat-box input[type='text']{
+    border: none;
     border-radius: 5px;
-    padding:5px;
-    width:75%;
+    padding: 0.5rem;
+    width: 90%;
 }
 
-form input[type='submit']{
+form.chat-box input[type='submit']{
     background: #45C5BF;
     border:none;
     border-radius: 5px;
@@ -35,28 +45,30 @@ form input[type='submit']{
     cursor:pointer;
     font-weight: bold;
     padding:7px 5px;
-    width:19%;
+    width:10%;
+    font-size: 1rem;
 }
 
-#history{
+div#history{
     background: #FFF;
-    border:2px solid #45C5BF;
-    height: 550px;
+    height: 70%;
+    background-color: #3c3c3c;
     width: 90%;
     margin: 0 auto;
     overflow-y: scroll;
 }
 
-#history .message-container{
+div#history .message-container{
     width: 100%;
     display: inline-block;
 }
 
-#history .message-box.sent{
+div#history .message-box.sent{
+    background-color: #ddfffd;
     float: right;
 }
 
-#history .message-box{
+div#history .message-box{
     width: fit-content!important;
     padding: 1rem 0.5rem;
     background: #ddd;
@@ -65,10 +77,65 @@ form input[type='submit']{
     display: block;
 }
 
-#history .message-box p{
+div#history .message-box p{
     margin: 0;
+    color: #333333;
+}
+
+div#history::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+div#history::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #F5F5F5;
+}
+
+div#history::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #555;
+}
+
+.chat-box{
+    width: 90%;
+    display: block;
+    margin: 0 auto;
 }
 
 #footer p{
     color: #FFFFFF;
+}
+
+@media only screen and (max-width: 850px){
+    h1.chat-title{
+        font-size: 3rem;
+    }
+
+    div#history .message-box{
+        padding: 1rem 1.5rem;
+    }
+
+    div#history .message-box p{
+        font-size: 1rem;
+    }
+
+    div#history .message-box small{
+        font-size: 0.7rem;
+    }
+
+    form.chat-box input[type='text']{
+        width: 80%;
+        font-size: 1rem;
+    }
+    
+    form.chat-box input[type='submit']{
+        width:20%;
+        font-size: 1.2rem;
+    }
 }

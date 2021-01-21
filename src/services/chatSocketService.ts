@@ -1,16 +1,25 @@
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 
 export default class ChatSocketService {
     chatIO: Server;
 
     constructor(http) {
         this.chatIO = new Server(http);
+    }
 
-        this.chatIO.on('connection', (socket) => {
-            console.log("connected", socket.id)
-            console.log('User connected');
+    StartService(){
+        
+        this.chatIO.on('connection', (socket:Socket) => {
+            let room = socket.handshake.query['room'];
+            let username = socket.handshake.query['username'];
+            let roomName = room.replace(/\//g, "-");
+            
+            socket.join(roomName);
+
+            this.chatIO.to(roomName).emit('join', username)
+            
             socket.on('chat message', (msg) => {
-                this.chatIO.emit('chat message', msg);
+                this.chatIO.to(roomName).emit('chat message', msg);
             });
 
             socket.on('disconnect', () => {
