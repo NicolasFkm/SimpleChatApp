@@ -2,7 +2,10 @@ import express from 'express';
 import bodyParser from "body-parser";
 import ChatSocketService from "./services/chatSocketService";
 import path from "path";
+import dotenv from 'dotenv';
 
+
+dotenv.config();
 const app = express();
 
 app.use(bodyParser.json());
@@ -18,6 +21,8 @@ const chatSocket = new ChatSocketService(http);
 chatSocket.StartService();
 
 const PORT = process.env.PORT || 3000;
+
+console.log(process.env);
 
 http.listen(PORT, () => {
     console.log(`listening on ${PORT}`);
