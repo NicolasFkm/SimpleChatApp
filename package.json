@@ -9,7 +9,7 @@
     "start:watch": "nodemon",
     "watch": "nodemon src",
     "build": "tsc -p src",
-    "prod": "npm run build && node dist/entry.js"
+    "prod": "npm run build && node dist/app.js"
   },
   "keywords": [],
   "author": "",
