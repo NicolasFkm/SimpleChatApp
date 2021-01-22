@@ -3,18 +3,22 @@ import { Router } from 'express';
 const router = Router();
 
 router.get('/:id', (req, res) => {
-    res.render("chatRoom", {
-        chatName: req.params.id
-    });
+    try {
+        res.render("chatRoom", {
+            chatName: req.params.id
+        });
+
+    } catch (error) {
+        console.error(error);
+    }
 });
 
 router.post('/join', (req, res) => {
-    res.redirect(`${req.body.chatRoomName}`);
-});
-
-router.post('/send', (req, res) => {
-    let { message, chatRoom } = req.body;
-    
+    try {
+        res.redirect(`${req.body.chatRoomName}`);
+    } catch (error) {
+        console.error(error);
+    }
 });
 
 module.exports = router;

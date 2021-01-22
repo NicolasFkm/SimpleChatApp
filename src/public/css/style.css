@@ -2,6 +2,7 @@ html, body{
     font-family: Arial, Tahoma, sans-serif;
     margin: 0;
     padding: 0;
+    color: #ffffff;
 }
 body{
     background:#302F31;
@@ -11,10 +12,6 @@ body{
 h1.chat-title{
     color: #45C5BF;
     text-align: center;
-}
-
-h1,p{
-    color: #ffffff;
 }
 
 .hidden{
@@ -41,7 +38,6 @@ form.chat-box input[type='submit']{
     background: #45C5BF;
     border:none;
     border-radius: 5px;
-    color:#FFF;
     cursor:pointer;
     font-weight: bold;
     padding:7px 5px;
@@ -78,6 +74,7 @@ div#history .message-box{
 }
 
 div#history .message-box p{
+    font-size: 1rem;
     margin: 0;
     color: #333333;
 }
@@ -119,10 +116,6 @@ div#history::-webkit-scrollbar-thumb
 
     div#history .message-box{
         padding: 1rem 1.5rem;
-    }
-
-    div#history .message-box p{
-        font-size: 1rem;
     }
 
     div#history .message-box small{
