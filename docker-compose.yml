@@ -1,30 +1,9 @@
 version: '3'
 
 services:
-  nodejs:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: nodejs
-    container_name: nodejs
-    restart: unless-stopped
-    env_file: .env
-    environment:
-      - MYSQL_DATABASE=$DATABASE_DB
-      - MYSQL_USER=$DATABASE_USERNAME
-      - MYSQL_PASSWORD=$DATABASE_PASSWORD
-      - MYSQL_ROOT_PASSWORD=$DATABASE_ROOT_PASSWORD
-      - MYSQL_PORT=$DATABASE_PORT
-    ports:
-      - "8080:80"
-    volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
-    networks:
-      - app-network
-  db:
+  chat_db:
     image: mysql:5.7
-    container_name: db
+    container_name: chat_db
     restart: always
     env_file: .env
     environment:
@@ -33,12 +12,48 @@ services:
       - MYSQL_PASSWORD=$DATABASE_PASSWORD
       - MYSQL_ROOT_PASSWORD=$DATABASE_ROOT_PASSWORD
       - MYSQL_PORT=$DATABASE_PORT
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
     volumes:
       - dbdata:/data/db
     ports:
-      - '3306:3306'
+      - "3306:3306"
     expose:
-      - '3306'
+      - "3306"
+    networks:
+      - app-network
+  chat_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: nodemon --legacy-watch src/app.ts
+    image: chat_app
+    container_name: chat_app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - DB_HOST=$DATABASE_HOST
+      - DB_DATABASE=$DATABASE_DB
+      - DB_USERNAME=$DATABASE_USERNAME
+      - DB_PASSWORD=$DATABASE_PASSWORD
+      - DB_ROOT_PASSWORD=$DATABASE_ROOT_PASSWORD
+      - DB_PORT=$DATABASE_PORT
+      - WAIT_HOSTS=chat_db:3306
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=30
+      - WAIT_HOST_CONNECT_TIMEOUT=30
+    ports:
+      - "8080:80"
+    depends_on:
+      chat_db:
+        condition: service_healthy
+    links:
+      - chat_db
+    volumes:
+      - .:/home/node/app
+      - node_modules:/home/node/app/node_modules
     networks:
       - app-network
 networks:

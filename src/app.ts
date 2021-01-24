@@ -1,11 +1,10 @@
 import express from 'express';
 import bodyParser from "body-parser";
-import ChatSocketService from "./services/chatSocketService";
 import path from "path";
-import dotenv from 'dotenv';
+require("dotenv").config();
+import ChatSocketService from "./services/chatSocketService";
+import { database } from './helper/database';
 
-
-dotenv.config();
 const app = express();
 
 app.use(bodyParser.json());
@@ -21,9 +20,25 @@ const chatSocket = new ChatSocketService(http);
 chatSocket.StartService();
 
 const PORT = process.env.PORT || 3000;
+(async () => {
+    try {
+        database.authenticate()
+            .then(() => {
+                console.log('Connection has been established successfully.');
+            })
+            .catch((err) => {
+                console.log('Unable to connect to the database:', err);
+            });
 
-console.log(process.env);
+        await database.sync({ force: true });
 
-http.listen(PORT, () => {
-    console.log(`listening on ${PORT}`);
-});
+        http.listen(PORT, () => {
+            console.log(`listening on ${PORT}`);
+        });
+
+    }
+    catch (error) {
+        console.log(error);
+
+    }
+})();
