@@ -27,7 +27,7 @@ services:
   chat_app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile.nodejs
     command: nodemon --legacy-watch src/app.ts
     image: chat_app
     container_name: chat_app
