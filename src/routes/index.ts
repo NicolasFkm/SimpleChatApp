@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 const router = Router();
 
-router.use("/chat", require("./chatRoutes"));
+router.use("/chat", require("./ChatRoutes"));
 
 router.get('/', (req, res) => {
     try {

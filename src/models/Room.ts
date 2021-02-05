@@ -1,30 +1,31 @@
-import { Sequelize, Model, DataTypes, BuildOptions } from "sequelize";
+import { Model, DataTypes, Optional, Association, HasManyGetAssociationsMixin, HasManyCountAssociationsMixin, BelongsToManyAddAssociationMixin } from "sequelize";
 import { database } from "../helper/database";
 import { Message } from "./Message";
 import { User } from "./User";
 
-export class Room extends Model {
-    public id!: number;
-    public name!: string;
-    public readonly createdAt!: Date;
+export interface RoomAttributes {
+	id: number;
+	name: string;
 }
 
-Room.init(
-    {
-      id: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        autoIncrement: true,
-        primaryKey: true
-      },
-      name: {
-        type: new DataTypes.STRING(255),
-        allowNull: false,
-      },
-    },
-    {
-      tableName: "rooms",
-      sequelize: database
-    }
-);
+export interface RoomCreationAttributes extends Optional<RoomAttributes, "id"> { }
 
-Room.hasMany(Message);
+
+export class Room extends Model<RoomAttributes, RoomCreationAttributes> {
+	public id!: number;
+	public name!: string;
+
+	public messages?: Message[];
+	public users?: User[];
+
+	public getMessages!: HasManyGetAssociationsMixin<Message>;
+	public getUsers!: HasManyGetAssociationsMixin<User>;
+	public countUsers!: HasManyCountAssociationsMixin;
+	public addUser!: BelongsToManyAddAssociationMixin<User, number>;
+	public addMessage!: BelongsToManyAddAssociationMixin<Message, number>;
+
+	public static associations: {
+		users: Association<User, Room>,
+		messages: Association<Message, Room>
+	};
+}

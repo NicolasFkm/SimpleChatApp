@@ -2,8 +2,11 @@ import express from 'express';
 import bodyParser from "body-parser";
 import path from "path";
 require("dotenv").config();
-import ChatSocketService from "./services/chatSocketService";
+import ChatSocketService from "./services/ChatSocketService";
 import { database } from './helper/database';
+import UserService from './services/UserService';
+import MessageService from './services/MessageService';
+import RoomService from './services/RoomService';
 
 const app = express();
 
@@ -18,6 +21,7 @@ const http = require('http').createServer(app);
 
 const chatSocket = new ChatSocketService(http);
 chatSocket.StartService();
+
 
 const PORT = process.env.PORT || 3000;
 (async () => {
