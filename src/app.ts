@@ -34,7 +34,7 @@ const PORT = process.env.PORT || 3000;
                 console.log('Unable to connect to the database:', err);
             });
 
-        await database.sync({ force: true });
+        await database.sync();
 
         http.listen(PORT, () => {
             console.log(`listening on ${PORT}`);

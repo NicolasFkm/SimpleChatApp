@@ -8,14 +8,11 @@ export default class RoomService {
         return room;
     }
 
-    async addUser(room: Room, user: User): Promise<boolean> {
-        try {
-            await room.addUser(user, { through: {} });
-            return true;
-        }
-        catch (e) {
-            return false;
-        }
+    async addUser(room: Room, userId: number): Promise<User | null> {
+        const user = await User.findByPk(userId);        
+        await room.addUser(user!, { through: {} });
+        
+        return user;
     }
 
     async getByName(name: string): Promise<Room | null> {
@@ -23,8 +20,9 @@ export default class RoomService {
         return user;
     }
 
-    async getMessages(roomId: number): Promise<Message[] | undefined> {
-        const room = await Room.findByPk(roomId);
-        return room?.messages;
+    async getById(id: number): Promise<Room | null> {
+        const room = await Room.findByPk(id);
+
+        return room;
     }
 }

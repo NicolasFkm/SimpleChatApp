@@ -11,6 +11,11 @@ export default class UserService {
         const user = await User.findOne({ where: { name } });
         return user;
     }
+    
+    async getById(id: number): Promise<User | null> {
+        const user = await User.findByPk(id);
+        return user;
+    }
 
     async getMessages(userId: number): Promise<Message[] | undefined> {
         const user = await User.findByPk(userId);

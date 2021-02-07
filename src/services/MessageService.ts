@@ -23,8 +23,9 @@ export default class MessageService {
         return messages;
     }
 
-    async getById(): Promise<Message[]> {
-        const messages = await Message.findAll();
-        return messages;
+    async getById(id: number): Promise<Message | null> {
+        const message = await Message.findByPk(id);
+        
+        return message;
     }
 }
