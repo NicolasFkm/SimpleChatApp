@@ -6,12 +6,7 @@ const messageService = new MessageService();
 export const CreateMessage = async (req, res, next) => {
     try {
         const { chatRoomId, userId, text } = req.body;
-
-        console.log("CREATE MESSAGE", chatRoomId, userId, text);
-        
         const message = await messageService.create(text, chatRoomId, userId);
-        
-        console.log("MESSAGE", message);
 
         res.status(HttpStatus.SUCCESS)
             .json({ data: message });

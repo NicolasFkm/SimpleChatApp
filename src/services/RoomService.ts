@@ -1,3 +1,4 @@
+import { database } from '../helper/database';
 import { Message } from '../models/Message';
 import { Room } from '../models/Room';
 import { User } from '../models/User';
@@ -9,9 +10,9 @@ export default class RoomService {
     }
 
     async addUser(room: Room, userId: number): Promise<User | null> {
-        const user = await User.findByPk(userId);        
+        const user = await User.findByPk(userId);
         await room.addUser(user!, { through: {} });
-        
+
         return user;
     }
 

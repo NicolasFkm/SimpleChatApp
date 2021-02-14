@@ -1,4 +1,4 @@
-import { Model,	DataTypes, Association,	Optional, HasOneGetAssociationMixin } from "sequelize";
+import { Model, DataTypes, Association, Optional, HasOneGetAssociationMixin, BuildOptions, NOW } from "sequelize";
 import { database } from "../helper/database";
 import { Room } from "./Room";
 import { User } from "./User";
@@ -6,7 +6,7 @@ import { User } from "./User";
 export interface MessageAttributes {
 	id: number;
 	text: string;
-	
+
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -16,14 +16,14 @@ export interface MessageCreationAttributes extends Optional<MessageAttributes, "
 export class Message extends Model<MessageAttributes, MessageCreationAttributes> {
 	public id!: number;
 	public text!: string;
-	
+
 	public roomId!: number;
 	public userId!: number;
-	
+
 	public createdAt!: Date;
 	public updatedAt!: Date;
 	public user!: User
-	
+
 	public getUser!: HasOneGetAssociationMixin<User>;;
 
 	public static associations: {
@@ -31,3 +31,45 @@ export class Message extends Model<MessageAttributes, MessageCreationAttributes>
 		room: Association<Room, User>
 	};
 }
+
+export const initMessage = () => {
+
+	Message.init(
+		{
+			id: {
+				type: DataTypes.INTEGER.UNSIGNED,
+				autoIncrement: true,
+				primaryKey: true
+			},
+			text: {
+				type: new DataTypes.STRING(255),
+				allowNull: false,
+			},
+			createdAt: {
+				type: DataTypes.DATE,
+				defaultValue: NOW
+			},
+			updatedAt: {
+				type: DataTypes.DATE,
+				defaultValue: NOW
+			}
+		},
+		{
+			tableName: "messages",
+			timestamps: false,
+			sequelize: database
+		}
+	);
+
+	
+}
+
+export const associateMessage = () => {
+	Message.belongsTo(Room, {
+		targetKey: "id"
+	});
+	
+	Message.belongsTo(User, {
+		targetKey: "id"
+	});
+};

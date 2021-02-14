@@ -29,3 +29,36 @@ export class Room extends Model<RoomAttributes, RoomCreationAttributes> {
 		messages: Association<Message, Room>
 	};
 }
+
+export const initRoom = () => {
+	Room.init(
+		{
+			id: {
+				type: DataTypes.INTEGER.UNSIGNED,
+				autoIncrement: true,
+				primaryKey: true
+			},
+			name: {
+				type: new DataTypes.STRING(255),
+				allowNull: false,
+			},
+		},
+		{
+			tableName: "rooms",
+			timestamps: true,
+			sequelize: database
+		}
+	);
+
+
+}
+
+export const associateRoom = () => {
+	Room.hasMany(Message, {
+		sourceKey: "id"
+	});
+
+	Room.belongsToMany(User, {
+		through: "Room_User"
+	});
+};
