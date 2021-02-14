@@ -6,7 +6,9 @@ export default class MessageService {
     async create(text: string, roomId: number, userId: number): Promise<Message> {
         const message = await Message.create(
             { 
-                text
+                text,
+                createdAt: new Date(),
+                updatedAt: new Date()
             }
             );
         const user = await User.findByPk(userId);

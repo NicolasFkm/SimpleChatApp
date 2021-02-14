@@ -1,4 +1,4 @@
-import { DataTypes, Sequelize } from "sequelize";
+import { DataTypes, NOW, Sequelize } from "sequelize";
 import { Message } from "../models/Message";
 import { Room } from "../models/Room";
 import { User } from "../models/User";
@@ -63,11 +63,19 @@ Message.init(
         text: {
             type: new DataTypes.STRING(255),
             allowNull: false,
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: NOW
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: NOW
         }
     },
     {
         tableName: "messages",
-        timestamps: true,
+        timestamps: false,
         sequelize: database
     }
 );

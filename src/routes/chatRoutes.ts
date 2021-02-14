@@ -2,16 +2,11 @@ import { Router } from 'express';
 
 const router = Router();
 
-router.get('/:id', (req, res) => {
-    try {
-        res.render("chatRoom", {
-            chatName: req.params.id
-        });
+import { GetChatRoom, GetChatRoomMessages } from '../controllers/ChatController';
 
-    } catch (error) {
-        console.error(error);
-    }
-});
+
+router.get('/:id', GetChatRoom);
+router.get('/:id/message', GetChatRoomMessages);
 
 router.post('/join', (req, res) => {
     try {

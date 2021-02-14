@@ -1,12 +1,25 @@
 import { HttpStatus } from "../helper/status";
+import RoomService from "../services/RoomService";
 import UserService from "../services/UserService";
 
 const userService = new UserService();
+const roomService = new RoomService();
 
 export const CreateUser = async (req, res, next) => {
     try {
-        const { name } = req.body;
-        const user = await userService.create(name);
+        const { name, roomId } = req.body;
+
+        const room = await roomService.getById(roomId);
+        let user = room?.users?.find((user)=> user.name == name );
+
+        if(user != undefined){
+            res.status(HttpStatus.SUCCESS)
+                .json({ data: user });
+            
+            return;
+        }
+
+        user = await userService.create(name);
 
         res.status(HttpStatus.CREATED)
             .json({ data: user });

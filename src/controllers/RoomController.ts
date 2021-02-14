@@ -6,8 +6,6 @@ const roomService = new RoomService();
 export const CreateRoom = async (req, res, next) => {
     try {
         const { name } = req.body;
-        console.log("[CreateRoom] body: " + JSON.stringify(req.body));
-        console.log("[CreateRoom] name: " + req.body.name)
         const room = await roomService.create(name);
 
         res.status(HttpStatus.CREATED)
@@ -44,8 +42,6 @@ export const AddUser = async (req, res, next) => {
     try {
         const { userId } = req.body;
         const { id } = req.params;
-        console.log("[ADDUSER] userId ", userId);
-        console.log("[ADDUSER] id ", id);
         const room = await roomService.getById(id);
         const user = await roomService.addUser(room!, userId);
 

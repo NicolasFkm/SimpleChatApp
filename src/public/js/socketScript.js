@@ -12,13 +12,12 @@ $(async function () {
     })
     .then(response => response.json())
     .then(response => {
-        console.log("response", response.data);
-        console.log("id ", response.data.id);
-        console.log("Room created name");
         window.localStorage.setItem('roomId', response.data.id);
     });
 
     await saveUserName();
+
+    await fetchRoomMessages();
 
     $('form.chat-box').submit(async function (e) {
         e.preventDefault();
@@ -29,6 +28,8 @@ $(async function () {
 
         let message = $('#message').val();
         
+        console.log("Submit message");
+        
         await fetch('/message', {
             method: 'POST',
             mode: 'cors',
@@ -36,21 +37,24 @@ $(async function () {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({text: message})
+            body: JSON.stringify({text: message, userId: window.localStorage.getItem('userId'), chatRoomId: window.localStorage.getItem('roomId')})
         })
-            .then(response => response.json())
-            .then(response => {
-                let username = window.localStorage.getItem('username');
-        
-                socket.emit('chat message', { message: message, username });
+        .then(response => response.json())
+        .then(response => {
+            console.log("Reponse: ", response);
+            let userId = window.localStorage.getItem('userId');
+            let username = window.localStorage.getItem('username');
+            
+            socket.emit('chat message', { message: message, user: {userId, username} });
                 $('#message').val('');
             })
         return false;
     });
 
     socket.on('chat message', function (msg) {
-        let clientUsername = window.localStorage.getItem('username');
-        const message = BuildMessageElement(msg.message, msg.username, clientUsername);
+        let userId = window.localStorage.getItem('userId');
+        let username = window.localStorage.getItem('username');
+        const message = BuildMessageElement(msg.message, msg.user.userId, userId, username);
         $('#history').append(message);
 
         const objDiv = document.getElementById("history");
@@ -58,13 +62,13 @@ $(async function () {
     });
 });
 
-function BuildMessageElement(message, username, clientUsername) {
+function BuildMessageElement(message, messageUserId, userId, username) {
     const container = $('<div>').addClass("message-container");
     const div = $('<div>').addClass("message-box");
     const user = $('<small>').text(`${username}: `);
     const messageElement = $('<p>').text(message);
 
-    if (username == clientUsername) {
+    if (messageUserId == userId) {
         div.addClass("sent");
     }
     else {
@@ -80,7 +84,6 @@ function BuildMessageElement(message, username, clientUsername) {
 async function saveUserName() {
     var clientUsername = "";
     do {
-        console.log(clientUsername);
         clientUsername = prompt("What's your name?")
     }
     while (clientUsername.trim() == "");
@@ -92,7 +95,7 @@ async function saveUserName() {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({name: clientUsername})
+        body: JSON.stringify({name: clientUsername, roomId: window.localStorage.getItem('roomId')})
     })
         .then(response => response.json())
         .then(response => {
@@ -114,6 +117,30 @@ async function saveUserName() {
                 .then(data => {
                     console.log("Added user to the room")
                 })
+        });
+
+}
+
+async function fetchRoomMessages() {
+      await fetch(`${window.location.pathname}/message`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(response => {
+            let userId = window.localStorage.getItem('userId');
+            console.log("response is", response);
+
+            if(response.data == undefined) return;
+
+            response.data.forEach(message => {                
+                const messageElement = BuildMessageElement(message.text, message.user.id, userId, message.user.name);
+                $('#history').append(messageElement);
+            });
         });
 
 }
