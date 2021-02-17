@@ -6,9 +6,11 @@ const roomService = new RoomService();
 export const CreateRoom = async (req, res, next) => {
     try {
         const { name } = req.body;
-        const room = await roomService.create(name);
+        const [room, created] = await roomService.create(name);
 
-        res.status(HttpStatus.CREATED)
+        const status = created? HttpStatus.CREATED:HttpStatus.SUCCESS;
+
+        res.status(status)
             .json({ data: room });
     } catch (error) {
         console.error(error);

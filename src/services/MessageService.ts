@@ -11,11 +11,11 @@ export default class MessageService {
                 updatedAt: new Date()
             }
             );
-        const user = await User.findByPk(userId);
-        user?.createMessage(message);
+        const user = await User.findByPk(userId, {include: [{all: true}]});
+        let result = await user?.addMessage(message);
         
-        const room = await Room.findByPk(roomId);
-        room?.addMessage(message);
+        const room = await Room.findByPk(roomId, {include: [{all: true}]});
+        await room?.addMessage(message);
         
         return message;
     }

@@ -26,14 +26,8 @@ chatSocket.StartService();
 const PORT = process.env.PORT || 3000;
 (async () => {
     try {
-        database.authenticate()
-            .then(() => {
-                console.log('Connection has been established successfully.');
-            })
-            .catch((err) => {
-                console.log('Unable to connect to the database:', err);
-            });
-
+        await database.authenticate()
+        console.log('Connection has been established successfully.');    
         await database.sync();
 
         http.listen(PORT, () => {

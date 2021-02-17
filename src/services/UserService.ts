@@ -2,8 +2,8 @@ import { Message } from '../models/Message';
 import { User } from '../models/User';
 
 export default class UserService {
-    async create(name: string): Promise<User> {
-        const user = await User.create({ name });
+    async create(name: string): Promise<[User, boolean]> {
+        const user = await User.findOrCreate({ where: {name} });
         return user;
     }
 

@@ -1,4 +1,4 @@
-import { Model, DataTypes, Optional, Association, HasManyGetAssociationsMixin, HasManyCountAssociationsMixin, BelongsToManyAddAssociationMixin } from "sequelize";
+import { Model, DataTypes, Optional, Association, HasManyGetAssociationsMixin, HasManyCountAssociationsMixin, BelongsToManyAddAssociationMixin, HasManyAddAssociationMixin } from "sequelize";
 import { database } from "../helper/database";
 import { Message } from "./Message";
 import { User } from "./User";
@@ -22,7 +22,7 @@ export class Room extends Model<RoomAttributes, RoomCreationAttributes> {
 	public getUsers!: HasManyGetAssociationsMixin<User>;
 	public countUsers!: HasManyCountAssociationsMixin;
 	public addUser!: BelongsToManyAddAssociationMixin<User, number>;
-	public addMessage!: BelongsToManyAddAssociationMixin<Message, number>;
+	public addMessage!: HasManyAddAssociationMixin<Message, number>;
 
 	public static associations: {
 		users: Association<User, Room>,
@@ -54,9 +54,7 @@ export const initRoom = () => {
 }
 
 export const associateRoom = () => {
-	Room.hasMany(Message, {
-		sourceKey: "id"
-	});
+	Room.hasMany(Message);
 
 	Room.belongsToMany(User, {
 		through: "Room_User"

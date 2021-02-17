@@ -1,4 +1,5 @@
 import { HttpStatus } from "../helper/status";
+import { User } from "../models/User";
 import RoomService from "../services/RoomService";
 import UserService from "../services/UserService";
 
@@ -8,20 +9,13 @@ const roomService = new RoomService();
 export const CreateUser = async (req, res, next) => {
     try {
         const { name, roomId } = req.body;
-
+        let [user, created] : [User|undefined, boolean] = await userService.create(name);
         const room = await roomService.getById(roomId);
-        let user = room?.users?.find((user)=> user.name == name );
+        const status = created? HttpStatus.CREATED: HttpStatus.SUCCESS;
 
-        if(user != undefined){
-            res.status(HttpStatus.SUCCESS)
-                .json({ data: user });
-            
-            return;
-        }
+        room?.addUser(user);
 
-        user = await userService.create(name);
-
-        res.status(HttpStatus.CREATED)
+        res.status(status)
             .json({ data: user });
     } catch (error) {
         console.error(error);

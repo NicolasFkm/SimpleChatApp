@@ -1,4 +1,4 @@
-import { Model, DataTypes, Association, Optional, HasOneGetAssociationMixin, BuildOptions, NOW } from "sequelize";
+import { Model, DataTypes, Association, Optional, HasOneGetAssociationMixin, BuildOptions, NOW, BelongsToGetAssociationMixin } from "sequelize";
 import { database } from "../helper/database";
 import { Room } from "./Room";
 import { User } from "./User";
@@ -24,7 +24,8 @@ export class Message extends Model<MessageAttributes, MessageCreationAttributes>
 	public updatedAt!: Date;
 	public user!: User
 
-	public getUser!: HasOneGetAssociationMixin<User>;;
+	public getUser!: BelongsToGetAssociationMixin<User>;
+	public getRoom!: BelongsToGetAssociationMixin<Room>;
 
 	public static associations: {
 		user: Association<Message, User>,
@@ -65,11 +66,7 @@ export const initMessage = () => {
 }
 
 export const associateMessage = () => {
-	Message.belongsTo(Room, {
-		targetKey: "id"
-	});
+	Message.belongsTo(Room);
 	
-	Message.belongsTo(User, {
-		targetKey: "id"
-	});
+	Message.belongsTo(User);
 };

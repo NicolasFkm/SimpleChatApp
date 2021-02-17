@@ -17,7 +17,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
 	public messages?: Message[];
 	public rooms?: Room[];
 
-	public createMessage!: HasManyAddAssociationMixin<Message, number>;
+	public addMessage!: HasManyAddAssociationMixin<Message, number>;
 	public countMessage!: HasManyCountAssociationsMixin;
 	public getMessages!: HasManyGetAssociationsMixin<Message>;
 
@@ -50,9 +50,7 @@ export const initUser = () => {
 } 
 
 export const associateUser = () => {
-	User.hasMany(Message, {
-		sourceKey: "id"
-	});
+	User.hasMany(Message);
 
 
 	User.belongsToMany(Room, {

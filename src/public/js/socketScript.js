@@ -53,8 +53,7 @@ $(async function () {
 
     socket.on('chat message', function (msg) {
         let userId = window.localStorage.getItem('userId');
-        let username = window.localStorage.getItem('username');
-        const message = BuildMessageElement(msg.message, msg.user.userId, userId, username);
+        const message = BuildMessageElement(msg.message, msg.user.userId, userId, msg.user.username);
         $('#history').append(message);
 
         const objDiv = document.getElementById("history");
@@ -122,7 +121,9 @@ async function saveUserName() {
 }
 
 async function fetchRoomMessages() {
-      await fetch(`${window.location.pathname}/message`, {
+    console.log("fetchRoomMessages [STARTED]");
+
+    fetch(`${window.location.pathname}/message`, {
         method: 'GET',
         mode: 'cors',
         headers: {
@@ -133,12 +134,12 @@ async function fetchRoomMessages() {
         .then(response => response.json())
         .then(response => {
             let userId = window.localStorage.getItem('userId');
-            console.log("response is", response);
+            console.log("response is", response.messages);
 
-            if(response.data == undefined) return;
+            if(response == undefined) return;
 
-            response.data.forEach(message => {                
-                const messageElement = BuildMessageElement(message.text, message.user.id, userId, message.user.name);
+            response.messages.forEach(message => {                
+                const messageElement = BuildMessageElement(message.text, message.User.id, userId, message.User.name);
                 $('#history').append(messageElement);
             });
         });
